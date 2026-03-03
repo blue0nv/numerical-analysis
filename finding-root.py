@@ -65,6 +65,3 @@ def newton(xi):
 
     i += 1
     return newton(xi_1)
-
-func_input()
-newton(5)
