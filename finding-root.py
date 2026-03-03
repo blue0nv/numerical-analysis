@@ -3,7 +3,7 @@ import sympy as sp
 eq = ""
 i = 0
 print("This program finds the root of a given function, for power use '^' and for multiplication use '*'")
-target_error = int(input("Enter the acceptable error percentage: "))
+target_error = float(input("Enter the acceptable error percentage: "))
 
 #----------------------------------- Functions that are needed for calculations ----------------------------------------
 
@@ -65,3 +65,4 @@ def newton(xi):
 
     i += 1
     return newton(xi_1)
+
