@@ -73,7 +73,7 @@ def newton(xi):
     i += 1
     return newton(xi_1)
 
-#Method Two
+# Method Two
 def false_position(xl, xu, xr_old=0):
     global new_eq, i, target_error
 
@@ -106,3 +106,4 @@ def false_position(xl, xu, xr_old=0):
 
     i += 1
     return false_position(xl, xu, xr)
+
