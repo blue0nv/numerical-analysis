@@ -13,7 +13,7 @@ Or if it for whatever reason doesn't work, try `py -m pip install sympy`.
 > If it didn't throw an error, you have `SymPy` already installed -> ignore this.
 ---
 
-+ #### `global eq, i, target_error`
++ #### `global new_eq, i, target_error`
 
   The whole program probably revolves around these three variables. You will most definitely need them in your function.<br>
   So to avoid any confusion, always insert `global eq, i, target_error` at the start of your function.
