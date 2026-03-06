@@ -1,6 +1,7 @@
 import sympy as sp
 
 eq = ""
+new_eq = ""
 i = 0
 print("This program finds the root of a given function, for power use '^' and for multiplication use '*'")
 target_error = float(input("Enter the acceptable error percentage: "))
@@ -8,7 +9,7 @@ target_error = float(input("Enter the acceptable error percentage: "))
 #----------------------------------- Functions that are needed for calculations ----------------------------------------
 
 def func_input():
-    global eq
+    global eq, new_eq
     while True:
         eq = input("Enter the function in terms of x: ")
 
@@ -16,22 +17,28 @@ def func_input():
             print("Please enter a valid function containing 'x'.")
             continue
 
-        eq = eq.replace("^", "**")
+        new_eq = ""
+        for i, letter in enumerate(eq):
+            new_eq += letter
+            if letter.isdigit() and i + 1 < len(eq) and eq[i + 1] == 'x':
+                new_eq += '*'
+
+        new_eq = new_eq.replace("^", "**")
 
         try:
             x = 1
-            test = eval(eq)
+            test = eval(new_eq)
         except Exception:
             print("Please enter a valid function.")
             continue
 
         print("Valid function, please choose a method")
         break
-    return eq
+    return new_eq
 
 def fn(x):
-    global eq
-    return eval(eq)
+    global new_eq
+    return eval(new_eq)
 
 def derive(equ):
     x = sp.symbols('x')
@@ -42,8 +49,8 @@ def derive(equ):
 # --------------------------------------------- Method functions -------------------------------------------------------
 
 def newton(xi):
-    global eq, i, target_error
-    fn_dash = derive(eq)
+    global new_eq, i, target_error
+    fn_dash = derive(new_eq)
 
     xi_1 = xi - (fn(xi) / fn_dash(xi))
     if i != 0:
@@ -65,4 +72,3 @@ def newton(xi):
 
     i += 1
     return newton(xi_1)
-
