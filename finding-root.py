@@ -46,7 +46,15 @@ def derive(equ):
     res = sp.diff(func, x)
     return sp.lambdify(x, res, "math")
 
+#wip not yet finished
+def solve(equ, xi):
+    x = sp.symbols('x')
+    h = sp.sympify(equ)
+    res = float(h.subs(x, xi))
+    return res
+
 # --------------------------------------------- Method functions -------------------------------------------------------
+
 # Method One
 def newton(xi):
     global new_eq, i, target_error
@@ -108,6 +116,7 @@ def false_position(xl, xu, xr_old=0):
     return false_position(xl, xu, xr)
 
 # Method Three
+<<<<<<< main
 def secant(xi_1, xi):
     global new_eq, i, target_error
 
@@ -121,6 +130,19 @@ def secant(xi_1, xi):
           f"F(Xi-1)={fn(xi_1):9.4f} | "
           f"Xi={xi:9.4f} | "
           f"F(Xi)={fn(xi):9.4f}", end="")
+=======
+def simple_fixed_point(xi):
+    global new_eq, i, target_error
+
+    xi_1 = solve(new_eq)
+
+    if i != 0:
+        error = abs((xi_1 - xi) / xi_1) * 100
+
+    print(f"I={i:2d} | "
+          f"Xi={xi:9.4f} | "
+          f"Xi+1={xi_1:9.4f} | ", end="")
+>>>>>>> simple_fixed_point
 
     if i != 0:
         print(f" | ERROR= %{error:8.4f}", end="")
@@ -129,7 +151,15 @@ def secant(xi_1, xi):
 
     if i != 0 and error <= target_error:
         i = 0
+<<<<<<< main
         return xi_2
 
     i += 1
     return secant(xi, xi_2)
+=======
+        return xi_1
+
+    i += 1
+    return simple_fixed_point(xi_1)
+
+>>>>>>> simple_fixed_point
