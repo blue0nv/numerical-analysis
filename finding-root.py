@@ -46,7 +46,42 @@ def derive(equ):
     res = sp.diff(func, x)
     return sp.lambdify(x, res, "math")
 
+# will only be called once in main when sfp is chosen
+arranged_func = ""
+def func_arrange():
+    global arranged_func
+    while True:
+        temp = input("Enter g(x) (the arranged function): ")
+
+        if 'x' not in temp:
+            print("Please enter a valid function containing 'x'.")
+            continue
+
+        arranged_func = ""
+        for index, letter in enumerate(temp):
+            arranged_func += letter
+            if letter.isdigit() and index + 1 < len(temp) and temp[index + 1] == 'x':
+                arranged_func += '*'
+
+        arranged_func = arranged_func.replace("^", "**")
+
+        try:
+            x = 1
+            eval(arranged_func, {"x": x, "math": math, "sqrt": math.sqrt})
+        except Exception:
+            print("Please enter a valid function.")
+            continue
+
+        print("Valid function.")
+        break
+    return arranged_func
+
+def solve(x):
+    global arranged_func
+    return eval(arranged_func, {"x": x, "math": math, "sqrt": math.sqrt})
+
 # --------------------------------------------- Method functions -------------------------------------------------------
+
 # Method One
 def newton(xi):
     global new_eq, i, target_error
@@ -133,3 +168,28 @@ def secant(xi_1, xi):
 
     i += 1
     return secant(xi, xi_2)
+
+# Method Four
+def simple_fixed_point(xi):
+    global arranged_func, i, target_error
+
+    xi_1 = solve(xi)
+
+    if i != 0:
+        error = abs((xi_1 - xi) / xi_1) * 100
+
+    print(f"I={i:2d} | "
+          f"Xi={xi:9.4f} | "
+          f"Xi+1={xi_1:9.4f} | ", end="")
+
+    if i != 0:
+        print(f" | ERROR= %{error:8.4f}", end="")
+
+    input("     Press [Enter] to show the next iteration")
+
+    if i != 0 and error <= target_error:
+        i = 0
+        return xi_1
+
+    i += 1
+    return simple_fixed_point(xi_1)
