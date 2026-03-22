@@ -31,8 +31,14 @@ def func_input():
         new_eq = ""
         for index, letter in enumerate(eq):
             new_eq += letter
+
             if letter.isdigit() and index + 1 < len(eq) and eq[index + 1] == 'x':
                 new_eq += '*'
+            elif letter.isdigit() and index + 4 <= len(eq) and eq[index + 1:index + 4] in ["sin", "cos", "tan"]:
+                new_eq += '*'
+            elif letter.isdigit() and index + 5 <= len(eq) and eq[index + 1:index + 5] == "sqrt":
+                new_eq += '*'
+
 
         new_eq = new_eq.replace("^", "**")
 
@@ -71,8 +77,14 @@ def func_arrange():
         arranged_func = ""
         for index, letter in enumerate(temp):
             arranged_func += letter
+
             if letter.isdigit() and index + 1 < len(temp) and temp[index + 1] == 'x':
                 arranged_func += '*'
+            elif letter.isdigit() and index + 4 <= len(temp) and temp[index + 1:index + 4] in ["sin", "cos", "tan"]:
+                arranged_func += '*'
+            elif letter.isdigit() and index + 5 <= len(temp) and temp[index + 1:index + 5] == "sqrt":
+                arranged_func += '*'
+
 
         arranged_func = arranged_func.replace("^", "**")
 
