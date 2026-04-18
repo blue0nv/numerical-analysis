@@ -100,6 +100,32 @@ def call_method():
 
                 else:
                     another_status_bs.config(text="Invalid", fg="red")
+        case "fp":
+                xl = xl_entry.get()
+                xu = xu_entry.get()
+
+                if functions.num_validator(xl) and functions.num_validator(xu):
+                   another_status_bs.config(text="Valid", fg="green")
+
+                   xl = float(xl)
+                   xu = float(xu)
+
+                   if functions.fn(xl) * functions.fn(xu) < 0:
+
+                        result = functions.false_position_gui(xl, xu)
+
+                        result_text.delete("1.0", tk.END)
+
+                        for line in result:
+                            result_text.insert(tk.END, line + "\n")
+
+                    else:
+                        result_text.delete("1.0", tk.END)
+                        result_text.insert(tk.END, "Not solvable")
+                    show_result()
+
+                else:
+                    another_status_bs.config(text="Invalid", fg="red")           
 
         case "newton" | "secant":
             x0 = x0_entry.get()

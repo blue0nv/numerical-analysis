@@ -142,6 +142,39 @@ def false_position(xl, xu, xr_old=0):
 
     config.i += 1
     return false_position(xl, xu, xr)
+def false_position_gui(xl, xu):
+    results = []
+
+    xr_old = 0
+    config.i = 0
+
+    while True:
+        xr = xu - (fn(xu) * (xl - xu)) / (fn(xl) - fn(xu))
+
+        if config.i != 0:
+            error = abs((xr - xr_old) / xr) * 100
+        else:
+            error = None
+
+        line = f"I={config.i} | XL={xl:.4f} | XU={xu:.4f} | XR={xr:.4f}"
+
+        if error is not None:
+            line += f" | ERROR= %{error:.4f}"
+
+        results.append(line)
+
+        if error is not None and error <= float(config.target_error):
+            break
+
+        if fn(xl) * fn(xr) < 0:
+            xu = xr
+        else:
+            xl = xr
+
+        xr_old = xr
+        config.i += 1
+
+    return results
 
 # Method Three
 def secant(xi_1, xi):
