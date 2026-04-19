@@ -87,61 +87,36 @@ def solve(x):
 # --------------------------------------------- Method functions -------------------------------------------------------
 
 # Method One
-def newton(xi):
+def newton_gui(xi):
+    results = []
     fn_dash = derive(config.new_eq)
 
-    xi_1 = xi - (fn(xi) / fn_dash(xi))
-    if config.i != 0:
-        error = abs((xi_1 - xi) / xi_1) * 100
+    config.i = 0
 
-    print(f"I={config.i:2d} | "
-          f"Xi={xi:9.4f} | "
-          f"F(Xi)={fn(xi):9.4f} | "
-          f"F'(Xi)={fn_dash(xi):9.4f}", end="")
+    while True:
+        xi_1 = xi - (fn(xi) / fn_dash(xi))
 
-    if config.i != 0:
-        print(f" | ERROR= %{error:8.4f}", end="")
+        if config.i != 0:
+            error = abs((xi_1 - xi) / xi_1) * 100
+        else:
+            error = None
 
-    input("     Press [Enter] to show the next iteration")
+        line = f"I={config.i} | Xi={xi:.4f} | F(Xi)={fn(xi):.4f} | F'(Xi)={fn_dash(xi):.4f}"
 
-    if config.i != 0 and error <= config.target_error:
-        config.i = 0
-        return xi_1
+        if error is not None:
+            line += f" | ERROR= %{error:.4f}"
 
-    config.i += 1
-    return newton(xi_1)
+        results.append(line)
+
+        if error is not None and error <= float(config.target_error):
+            break
+
+        xi = xi_1
+        config.i += 1
+
+    return results
 
 # Method Two
-def false_position(xl, xu, xr_old=0):
-    xr = xu - (fn(xu) * (xl - xu)) / (fn(xl) - fn(xu))
-
-    if config.i != 0:
-        error = abs((xr - xr_old) / xr) * 100
-
-    print(f"I={config.i:2d} | "
-          f"XL={xl:9.4f} | "
-          f"F(XL)={fn(xl):9.4f} | "
-          f"XU={xu:9.4f} | "
-          f"F(XU)={fn(xu):9.4f} | "
-          f"XR={xr:9.4f} | "
-          f"F(XR)={fn(xr):9.4f}", end="")
-
-    if config.i != 0:
-        print(f" | ERROR= %{error:8.4f}", end="")
-
-    input("     Press [Enter] to show the next iteration")
-
-    if config.i != 0 and error <= config.target_error:
-        config.i = 0
-        return xr
-
-    if fn(xl) * fn(xr) < 0:
-        xu = xr
-    else:
-        xl = xr
-
-    config.i += 1
-    return false_position(xl, xu, xr)
 def false_position_gui(xl, xu):
     results = []
 
@@ -177,85 +152,63 @@ def false_position_gui(xl, xu):
     return results
 
 # Method Three
-def secant(xi_1, xi):
-    xi_2 = xi - (fn(xi) * (xi_1 - xi)) / (fn(xi_1) - fn(xi))
+def secant_gui(xi_1, xi):
+    results = []
+    config.i = 0
 
-    if config.i != 0:
-        error = abs((xi_2 - xi) / xi_2) * 100
+    while True:
+        xi_2 = xi - (fn(xi) * (xi_1 - xi)) / (fn(xi_1) - fn(xi))
 
-    print(f"I={config.i:2d} | "
-          f"Xi-1={xi_1:9.4f} | "
-          f"F(Xi-1)={fn(xi_1):9.4f} | "
-          f"Xi={xi:9.4f} | "
-          f"F(Xi)={fn(xi):9.4f}", end="")
+        if config.i != 0:
+            error = abs((xi_2 - xi) / xi_2) * 100
+        else:
+            error = None
 
-    if config.i != 0:
-        print(f" | ERROR= %{error:8.4f}", end="")
+        line = f"I={config.i} | Xi-1={xi_1:.4f} | Xi={xi:.4f} | F(Xi)={fn(xi):.4f}"
 
-    input("     Press [Enter] to show the next iteration")
+        if error is not None:
+            line += f" | ERROR= %{error:.4f}"
 
-    if config.i != 0 and error <= config.target_error:
-        config.i = 0
-        return xi_2
+        results.append(line)
 
-    config.i += 1
-    return secant(xi, xi_2)
+        if error is not None and error <= float(config.target_error):
+            break
+
+        xi_1 = xi
+        xi = xi_2
+        config.i += 1
+
+    return results
 
 # Method Four
-def simple_fixed_point(xi):
-    xi_1 = solve(xi)
+def simple_fixed_point_gui(xi):
+    results = []
+    config.i = 0
 
-    if config.i != 0:
-        error = abs((xi_1 - xi) / xi_1) * 100
+    while True:
+        xi_1 = solve(xi)
 
-    print(f"I={config.i:2d} | "
-          f"Xi={xi:9.4f} | "
-          f"Xi+1={xi_1:9.4f} | ", end="")
+        if config.i != 0:
+            error = abs((xi_1 - xi) / xi_1) * 100
+        else:
+            error = None
 
-    if config.i != 0:
-        print(f" | ERROR= %{error:8.4f}", end="")
+        line = f"I={config.i} | Xi={xi:.4f} | Xi+1={xi_1:.4f}"
 
-    input("     Press [Enter] to show the next iteration")
+        if error is not None:
+            line += f" | ERROR= %{error:.4f}"
 
-    if config.i != 0 and error <= config.target_error:
-        config.i = 0
-        return xi_1
+        results.append(line)
 
-    config.i += 1
-    return simple_fixed_point(xi_1)
+        if error is not None and error <= float(config.target_error):
+            break
+
+        xi = xi_1
+        config.i += 1
+
+    return results
 
 # Method Five
-def bisection(xl, xu, xr_old=0):
-    xr = (xl + xu) / 2
-
-    if config.i != 0:
-        error = abs((xr - xr_old) / xr) * 100
-
-    print(f"I={config.i:2d} | "
-          f"XL={xl:9.4f} | "
-          f"F(XL)={fn(xl):9.4f} | "
-          f"XU={xu:9.4f} | "
-          f"F(XU)={fn(xu):9.4f} | "
-          f"XR={xr:9.4f} | "
-          f"F(XR)={fn(xr):9.4f}", end="")
-
-    if config.i != 0:
-        print(f" | ERROR= %{error:8.4f}", end="")
-
-    input("     Press [Enter] to show the next iteration")
-
-    if config.i != 0 and error <= config.target_error:
-        config.i = 0
-        return xr
-
-    if fn(xl) * fn(xr) < 0:
-        xu = xr
-    else:
-        xl = xr
-
-    config.i += 1
-    return bisection(xl, xu, xr)
-
 def bisection_gui(xl, xu):
     results = []
 
